@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nebula OS</title>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    user-select:none;
+    font-family:Georgia,serif;
+}
+body{
+    overflow:hidden;
+    background:black;
+}
+
+#desktop{
+    width:100vw;
+    height:100vh;
+    background-image:url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1974&auto=format&fit=crop');
+    background-size:cover;
+    background-position:center;
+    position:relative;
+}
+
+.window{
+    width:320px;
+    background:#d8d8e0;
+    border:4px solid #b8b8c0;
+    border-radius:15px;
+    position:absolute;
+    overflow:hidden;
+    box-shadow:0 0 10px rgba(0,0,0,0.4);
+}
+
+.titlebar{
+    height:38px;
+    background:#d8d8e0;
+    display:flex;
+    align-items:center;
+    padding:0 10px;
+    border-bottom:2px solid #b0b0b8;
+}
+
+.titlebar img{
+    width:22px;
+    height:22px;
+    margin-right:8px;
+}
+
+.title{
+    font-size:28px;
+    transform:scale(0.5);
+    transform-origin:left center;
+    white-space:nowrap;
+}
+
+.window-buttons{
+    margin-left:auto;
+    display:flex;
+    gap:7px;
+}
+
+.window-buttons div{
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    border:2px solid rgba(0,0,0,0.2);
+}
+
+.red{background:#ff2323;}
+.yellow{background:#ffd400;}
+.green{background:#5eff00;}
+
+.window-content{
+    background:#f5f5f5;
+    padding:12px;
+    min-height:200px;
+}
+
+#terminal-window{left:70px;top:20px;}
+#browser-window{left:70px;top:280px;}
+#settings-window{right:60px;top:280px;}
+
+#terminal{
+    background:black;
+    color:white;
+    height:200px;
+    overflow-y:auto;
+    padding:10px;
+    font-family:monospace;
+    font-size:16px;
+}
+
+#terminal-input{
+    width:100%;
+    background:black;
+    color:white;
+    border:none;
+    outline:none;
+    font-family:monospace;
+    font-size:16px;
+}
+
+.browser-logo{
+    text-align:center;
+    margin-top:10px;
+}
+.browser-logo h1{
+    font-size:50px;
+    font-weight:normal;
+}
+
+.search-box{
+    width:90%;
+    margin:20px auto;
+    display:block;
+    padding:10px;
+    border-radius:20px;
+    border:2px solid #999;
+}
+
+#browser-frame{
+    width:100%;
+    height:180px;
+    border:none;
+    margin-top:10px;
+}
+
+.settings-text{
+    font-size:18px;
+    line-height:1.8;
+    cursor:pointer;
+}
+
+.profile{
+    position:absolute;
+    right:15px;
+    top:70px;
+    text-align:center;
+}
+
+.profile-pic{
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    border:3px solid #777;
+}
+
+.reboot{
+    position:absolute;
+    right:15px;
+    bottom:10px;
+    text-align:center;
+    cursor:pointer;
+}
+
+#dock{
+    position:absolute;
+    bottom:10px;
+    left:50%;
+    transform:translateX(-50%);
+    height:55px;
+    background:black;
+    display:flex;
+    align-items:center;
+    padding:0 10px;
+    gap:12px;
+}
+
+.dock-icon{
+    width:58px;
+    height:58px;
+    object-fit:contain;
+    background:rgba(255,255,255,0.08);
+    border-radius:50%;
+    padding:4px;
+    border:2px solid rgba(255,255,255,0.2);
+    cursor:pointer;
+}
+
+.desktop-icon{
+    position:absolute;
+    top:20px;
+    left:15px;
+    text-align:center;
+    color:white;
+}
+
+.desktop-icon img{
+    width:60px;
+}
+
+.fire-animation{
+    animation:fire 0.2s infinite alternate;
+}
+
+@keyframes fire{
+    from{text-shadow:0 0 5px red;}
+    to{text-shadow:0 0 20px yellow;}
+}
+</style>
+</head>
+<body>
+
+<div id="desktop">
+
+<div class="desktop-icon">
+<img src="/mnt/data/image(3).png">
+<div>Trash</div>
+</div>
+
+<div class="window" id="terminal-window">
+<div class="titlebar">
+<img src="/mnt/data/image(2).png">
+<div class="title">Terminal</div>
+<div class="window-buttons"><div class="green"></div><div class="yellow"></div><div class="red"></div></div>
+</div>
+<div id="terminal">
+<div>> Nebula OS terminal</div>
+<input id="terminal-input" />
+</div>
+</div>
+
+<div class="window" id="browser-window">
+<div class="titlebar">
+<img src="/mnt/data/image(3).png">
+<div class="title">Nebula Browser</div>
+<div class="window-buttons"><div class="green"></div><div class="yellow"></div><div class="red"></div></div>
+</div>
+<div class="window-content">
+<div class="browser-logo"><h1>Nebula</h1></div>
+<input class="search-box" id="search" placeholder="Search Google..." />
+<iframe id="browser-frame"></iframe>
+</div>
+</div>
+
+<div class="window" id="settings-window">
+<div class="titlebar">
+<img src="/mnt/data/image(3).png">
+<div class="title">Settings</div>
+<div class="window-buttons"><div class="green"></div><div class="yellow"></div><div class="red"></div></div>
+</div>
+<div class="window-content">
+<div class="settings-text">
+<div onclick="setBg()">change background</div>
+<div onclick="renameOS()">change name</div>
+<div onclick="toggleDark()">dark mode</div>
+<div onclick="changePfp()">change profile picture</div>
+</div>
+<div class="profile">
+<img class="profile-pic" id="pfp" src="/mnt/data/image(3).png" />
+<div id="osname">Nebula OS</div>
+</div>
+</div>
+</div>
+
+<div id="dock">
+<img class="dock-icon" onclick="toggle('browser-window')" src="/mnt/data/image(3).png" />
+<img class="dock-icon" onclick="toggle('terminal-window')" src="/mnt/data/image(2).png" />
+<img class="dock-icon" onclick="toggle('settings-window')" src="/mnt/data/image(3).png" />
+</div>
+
+</div>
+
+<script>
+const terminal=document.getElementById('terminal');
+const input=document.getElementById('terminal-input');
+
+input.addEventListener('keydown',e=>{
+if(e.key==='Enter'){
+let cmd=input.value;
+add(cmd);
+run(cmd);
+input.value='';
+}
+});
+
+function add(t){
+const d=document.createElement('div');
+d.textContent='> '+t;
+terminal.appendChild(d);
+}
+
+function run(cmd){
+cmd=cmd.toLowerCase();
+
+if(cmd==='clear'){
+terminal.innerHTML='<div>> cleared</div>';
+return;
+}
+
+if(cmd==='fire'){
+for(let i=0;i<20;i++){
+let d=document.createElement('div');
+let s='';
+let c=['▓','▒','░','█'];
+for(let j=0;j<60;j++)s+=c[Math.random()*c.length|0];
+d.textContent=s;
+d.className='fire-animation';
+terminal.appendChild(d);
+}
+setInterval(()=>{
+document.querySelectorAll('.fire-animation').forEach(d=>{
+let s='';
+let c=['▓','▒','░','█'];
+for(let j=0;j<60;j++)s+=c[Math.random()*c.length|0];
+d.textContent=s;
+});
+},120);
+}
+
+if(cmd.startsWith('open google')){
+let q=cmd.replace('open google','').trim();
+document.getElementById('browser-frame').src='https://www.google.com/search?q='+encodeURIComponent(q);
+}
+}
+
+function toggle(id){
+document.getElementById(id).style.display='block';
+}
+
+function setBg(){
+document.getElementById('desktop').style.background='linear-gradient(#000428,#004e92)';
+}
+
+function renameOS(){
+let n=prompt('name');
+if(n)document.getElementById('osname').textContent=n;
+}
+
+function toggleDark(){document.body.style.filter='invert(1)';}
+
+function changePfp(){
+document.getElementById('pfp').src='/mnt/data/image(3).png';
+}
+</script>
+
+</body>
+</html>
